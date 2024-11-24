@@ -1,10 +1,10 @@
 'use server';
 
+import { signIn } from "@/lib/auth";
 import { APP_ROUTES } from "@/routes";
 import { InvalidCredentialsException } from "@/services/exceptions/InvalidCredentialsException";
-import { ServiceFactory } from "@/services/service-factory";
+import { CredentialsSignin } from "next-auth";
 import { isRedirectError } from "next/dist/client/components/redirect";
-import { redirect } from "next/navigation";
 import { ActionInjections, LoginFormData, LoginFormPrevState } from "./login-form.types";
 
 export async function loginActionWithInjections(
@@ -13,7 +13,7 @@ export async function loginActionWithInjections(
   formData: FormData
 ) {
   const data = Object.fromEntries(formData) as LoginFormData
-  const { userService } = injections
+  const { signIn } = injections
 
   try {
     const { email, password } = data
@@ -26,15 +26,22 @@ export async function loginActionWithInjections(
       }
     }
 
-    await userService.login({ email, password })
+    await signIn('credentials', {
+      email,
+      password,
+      redirect: true,
+      redirectTo: APP_ROUTES.DASHBOARD
+    })
 
-    return redirect(APP_ROUTES.DASHBOARD)
+    return {
+      success: true
+    }
   } catch (error: unknown) {
-    if (error instanceof InvalidCredentialsException) {
+    if (error instanceof InvalidCredentialsException || error instanceof CredentialsSignin) {
       return {
         data,
         success: false,
-        message: error.message
+        message: 'Usuário ou senha incorretos'
       }
     }
 
@@ -50,6 +57,4 @@ export async function loginActionWithInjections(
   }
 }
 
-export const loginAction = loginActionWithInjections.bind(null, {
-  userService: ServiceFactory.userService()
-})
+export const loginAction = loginActionWithInjections.bind(null, { signIn })

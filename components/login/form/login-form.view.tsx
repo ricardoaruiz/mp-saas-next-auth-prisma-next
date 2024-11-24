@@ -12,11 +12,6 @@ export const LoginFormView = ({ action }: LoginFormViewProps) => {
 
   return (
     <Form action={formAction}>
-      {formState.success === true && formState.message && (
-        <div>
-          <p className="text-sm text-green-500 p-2 border border-green-500 rounded-md bg-green-200  mb-4">{formState.message}</p>
-        </div>
-      )}
       {formState.success === false && (
         <div>
           <p className="text-sm text-red-500 p-2 border border-red-500 rounded-md bg-red-200  mb-4">{formState.message}</p>

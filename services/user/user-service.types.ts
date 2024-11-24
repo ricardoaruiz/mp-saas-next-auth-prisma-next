@@ -1,4 +1,5 @@
-import { User } from "@/domain/user-domain";
+import { User } from "@/domain/user-domain"
+// import { User as NextAuthUser } from "next-auth"
 
 export interface IUserService {
   create(params: CreateUserParams): Promise<CreateUserReturn>
@@ -14,4 +15,4 @@ export type LoginParams = {
   email: string
   password: string
 }
-export type LoginReturn = Omit<User, 'password'>
+export type LoginReturn = Omit<User, 'password'> | null

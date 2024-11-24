@@ -1,6 +1,5 @@
 import { compareHash, generateHash } from "@/lib/hash";
 import { IUserRepository } from "@/repositories/user/user-repository.types";
-import { InvalidCredentialsException } from "../exceptions/InvalidCredentialsException";
 import { UserAlreadyExistisException } from "../exceptions/UserAlreadyExistisException";
 import { CreateUserParams, CreateUserReturn, IUserService, LoginParams, LoginReturn } from "./user-service.types";
 
@@ -14,7 +13,7 @@ export class UserService implements IUserService {
    * @param {IUserRepository} userRepository - The user repository instance to be used by the service.
    * @returns {UserService} A new instance of UserService.
    */
-  static new(userRepository: IUserRepository) {
+  static new(userRepository: IUserRepository): UserService {
     return new UserService(userRepository);
   }
 
@@ -50,11 +49,13 @@ export class UserService implements IUserService {
    * @throws {InvalidCredentialsException} If the user or password is invalid.
    */
   async login(params: LoginParams): Promise<LoginReturn> {
+
+
     const { email, password } = params
     const foundUser = await this._userRepository.findByEmail(email)
 
     if (!foundUser || !compareHash(password, foundUser.password)) {
-      throw new InvalidCredentialsException('Usuário ou senha inválidos');
+      return null
     }
 
     return foundUser;

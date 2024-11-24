@@ -1,4 +1,4 @@
-import { IUserService } from "@/services/user/user-service.types";
+import { signIn } from "@/lib/auth";
 import { ActionPrevState } from "@/types/actions";
 import { loginAction } from "./login-form.action";
 
@@ -7,7 +7,7 @@ export type LoginFormViewProps = {
 }
 
 export type ActionInjections = {
-  userService: IUserService
+  signIn: typeof signIn
 }
 
 export type LoginFormData = {
