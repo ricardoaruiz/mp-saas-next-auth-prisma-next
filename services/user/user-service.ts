@@ -1,3 +1,4 @@
+import { generateHash } from "@/lib/hash";
 import { IUserRepository } from "@/repositories/user/user-repository.types";
 import { UserAlreadyExistisException } from "../exceptions/UserAlreadyExistisException";
 import { CreateUserParams, CreateUserReturn, IUserService } from "./user-service.types";
@@ -19,7 +20,10 @@ export class UserService implements IUserService {
       throw new UserAlreadyExistisException('Usuário já cadastrado');
     }
 
-    const createdUser = await this._userRepository.create(user);
+    const createdUser = await this._userRepository.create({
+      ...user,
+      password: generateHash(user.password)
+    });
     return createdUser
   }
 
