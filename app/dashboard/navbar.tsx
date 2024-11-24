@@ -1,8 +1,8 @@
 'use client';
 
+import { logoutAction } from '@/actions/logout';
 import Logo from '@/components/logo';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,11 +13,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { User } from 'lucide-react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 export default function Navbar({ userName }: { userName: string }) {
   const pathname = usePathname();
-  console.log(pathname);
 
   return (
     <header className="bg-white shadow-sm">
@@ -62,7 +62,9 @@ export default function Navbar({ userName }: { userName: string }) {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <button>Logout</button>
+                <form action={logoutAction}>
+                  <button type='submit' >Logout</button>
+                </form>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -9,6 +9,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { auth } from '@/lib/auth';
+import { APP_ROUTES } from '@/routes';
 import { Check, MenuIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -16,6 +18,8 @@ import logo from './assets/logo.svg';
 import womanImg from './assets/woman.svg';
 
 export default async function Home() {
+  const session = await auth();
+
   return (
     <main>
       <section className="container mx-auto text-center pb-20 px-2 md:px-0">
@@ -32,11 +36,20 @@ export default async function Home() {
                 <DropdownMenuItem>Funcionamento</DropdownMenuItem>
               </a>
               <DropdownMenuItem>Preço</DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link href="/login">
-                  <Button variant={'bg-white'}>Login</Button>
-                </Link>
-              </DropdownMenuItem>
+              {!session && (
+                <DropdownMenuItem>
+                  <Link href={APP_ROUTES.LOGIN}>
+                    <Button variant={'bg-white'}>Login</Button>
+                  </Link>
+                </DropdownMenuItem>
+              )}
+              {session && (
+                <DropdownMenuItem>
+                  <Link href={APP_ROUTES.DASHBOARD}>
+                    <Button variant={'bg-white'}>Dashboard</Button>
+                  </Link>
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
           <div className="items-center gap-1 hidden md:flex">
@@ -46,9 +59,16 @@ export default async function Home() {
             <Link href={'#preco'}>
               <Button variant={'link'}>Preço</Button>
             </Link>
-            <Link href="/login">
-              <Button variant={'bg-white'}>Login</Button>
-            </Link>
+            {!session && (
+              <Link href={APP_ROUTES.LOGIN}>
+                <Button variant={'bg-white'}>Login</Button>
+              </Link>
+            )}
+            {session && (
+              <Link href={APP_ROUTES.DASHBOARD}>
+                <Button variant={'bg-white'}>Dashboard</Button>
+              </Link>
+            )}
           </div>
         </nav>
         <h1 className="md:text-6xl text-2xl font-bold mt-8 md:mt-16">
